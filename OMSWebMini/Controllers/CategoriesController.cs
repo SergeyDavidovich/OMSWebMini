@@ -46,9 +46,27 @@ namespace OMSWebService.Controllers
                 return result;
             }
         }
+
+        // GET: api/Categories/5
+        [HttpGet("{id}")]
+        public async Task<ActionResult<object>> GetCategory(int id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+
+            if (category == null)
+                return NotFound();
+            else
+                return new
+                {
+                    CategoryID = category.CategoryId,
+                    CategoryName = category.CategoryName,
+                    Description = category.Description
+                };
+        }
+
         // POST: api/categories
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory(Category item)
+        public async Task<ActionResult<Category>> PostCategory([FromBody]Category item)
         {
             _context.Categories.Add(item);
             await _context.SaveChangesAsync();
@@ -61,6 +79,57 @@ namespace OMSWebService.Controllers
                     Description = item.Description
                 },
                 item); 
+        }
+
+        // PUT: api/Categories/5
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutCategory(int id, Category category)
+        {
+            if (id != category.CategoryId)
+            {
+                return BadRequest();
+            }
+
+            _context.Entry(category).State = EntityState.Modified;
+
+            try
+            {
+                await _context.SaveChangesAsync();
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!CategoryExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
+            return NoContent();
+        }
+
+        // DELETE: api/Categories/5
+        [HttpDelete("{id}")]
+        public async Task<ActionResult<Category>> DeleteCategory(int id)
+        {
+            var category = await _context.Categories.FindAsync(id);
+            if (category == null)
+            {
+                return NotFound();
+            }
+
+            _context.Categories.Remove(category);
+            await _context.SaveChangesAsync();
+
+            return category;
+        }
+
+        private bool CategoryExists(int id)
+        {
+            return _context.Categories.Any(e => e.CategoryId == id);
         }
     }
 }
