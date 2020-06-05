@@ -3,14 +3,14 @@ using System.Collections.Generic;
 
 namespace OMSWebService.Model
 {
-    public partial class Customers
+    public partial class Supplier
     {
-        public Customers()
+        public Supplier()
         {
-            Orders = new HashSet<Order>();
+            Products = new HashSet<Product>();
         }
 
-        public string CustomerId { get; set; }
+        public int SupplierId { get; set; }
         public string CompanyName { get; set; }
         public string ContactName { get; set; }
         public string ContactTitle { get; set; }
@@ -21,7 +21,8 @@ namespace OMSWebService.Model
         public string Country { get; set; }
         public string Phone { get; set; }
         public string Fax { get; set; }
+        public string HomePage { get; set; }
 
-        public virtual ICollection<Order> Orders { get; set; }
+        public virtual ICollection<Product> Products { get; set; }
     }
 }

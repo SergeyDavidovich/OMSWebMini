@@ -23,36 +23,44 @@ namespace OMSWebService.Controllers
 
         // GET: api/categories?include_picture=true
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Categories>>> GetCategories(bool include_pictures = false)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(bool include_pictures = false)
         {
+            string request = HttpContext.Request.Path;
+
             if (include_pictures)
             {
-                return await _context.Categories.ToListAsync();
+                var result = await _context.Categories.ToListAsync();
+                return result;
             }
             else
             {
-                var categories = _context.Categories.
+                var result = await _context.Categories.
                     Select(
-                    c => new Categories
+                    c => new Category
                     {
                         CategoryName = c.CategoryName,
                         CategoryId = c.CategoryId,
                         Description = c.Description
-                    }
-                    );
-                return await categories.ToListAsync();
+                    }).ToListAsync();
+
+                return result;
             }
         }
         // POST: api/categories
         [HttpPost]
-        public async Task<ActionResult<Categories>> PostTodoItem(Categories category)
+        public async Task<ActionResult<Category>> PostCategory(Category item)
         {
-            _context.Categories.Add(category);
+            _context.Categories.Add(item);
             await _context.SaveChangesAsync();
 
-            return null;
-            //return CreatedAtAction("GetTodoItem", new { id = todoItem.Id }, todoItem);
-            //return CreatedAtAction(nameof(Categories), new { id = category.CategoryId }, todoItem);
+            return CreatedAtAction(nameof(GetCategories),
+                new
+                {
+                    id = item.CategoryId,
+                    CategoryName = item.CategoryName,
+                    Description = item.Description
+                },
+                item); 
         }
     }
 }

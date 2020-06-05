@@ -3,9 +3,9 @@ using System.Collections.Generic;
 
 namespace OMSWebService.Model
 {
-    public partial class Shippers
+    public partial class Shipper
     {
-        public Shippers()
+        public Shipper()
         {
             Orders = new HashSet<Order>();
         }

@@ -16,13 +16,13 @@ namespace OMSWebService.Data
         {
         }
 
-        public virtual DbSet<Categories> Categories { get; set; }
-        public virtual DbSet<Customers> Customers { get; set; }
+        public virtual DbSet<Category> Categories { get; set; }
+        public virtual DbSet<Customer> Customers { get; set; }
         public virtual DbSet<OrderDetails> OrderDetails { get; set; }
         public virtual DbSet<Order> Orders { get; set; }
         public virtual DbSet<Product> Products { get; set; }
-        public virtual DbSet<Shippers> Shippers { get; set; }
-        public virtual DbSet<Suppliers> Suppliers { get; set; }
+        public virtual DbSet<Shipper> Shippers { get; set; }
+        public virtual DbSet<Supplier> Suppliers { get; set; }
 
         //protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         //{
@@ -41,7 +41,7 @@ namespace OMSWebService.Data
         {
             modelBuilder.HasAnnotation("ProductVersion", "2.2.0-rtm-35687");
 
-            modelBuilder.Entity<Categories>(entity =>
+            modelBuilder.Entity<Category>(entity =>
             {
                 entity.HasKey(e => e.CategoryId);
 
@@ -59,7 +59,7 @@ namespace OMSWebService.Data
                 entity.Property(e => e.Picture).HasColumnType("image");
             });
 
-            modelBuilder.Entity<Customers>(entity =>
+            modelBuilder.Entity<Customer>(entity =>
             {
                 entity.HasKey(e => e.CustomerId);
 
@@ -245,7 +245,7 @@ namespace OMSWebService.Data
                     .HasConstraintName("FK_Products_Suppliers");
             });
 
-            modelBuilder.Entity<Shippers>(entity =>
+            modelBuilder.Entity<Shipper>(entity =>
             {
                 entity.HasKey(e => e.ShipperId);
 
@@ -258,7 +258,7 @@ namespace OMSWebService.Data
                 entity.Property(e => e.Phone).HasMaxLength(24);
             });
 
-            modelBuilder.Entity<Suppliers>(entity =>
+            modelBuilder.Entity<Supplier>(entity =>
             {
                 entity.HasKey(e => e.SupplierId);
 
