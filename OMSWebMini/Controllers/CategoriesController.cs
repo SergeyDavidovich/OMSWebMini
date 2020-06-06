@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -23,28 +24,39 @@ namespace OMSWebService.Controllers
 
         // GET: api/categories?include_picture=true
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(
+        public async Task<ActionResult<IEnumerable>> GetCategories(
             bool include_pictures = false)
         {
             if (include_pictures)
             {
-                var result = await _context.Categories.ToListAsync();
+                var result = await _context.Categories
+                    .Select(
+                    c => new
+                    {
+                        CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
+                        Description = c.Description,
+                        Picture = c.Picture
+                    }).ToListAsync();
+
                 return result;
             }
             else
             {
                 var result = await _context.Categories.
                     Select(
-                    c => new Category
+                    c => new
                     {
-                        CategoryName = c.CategoryName,
                         CategoryId = c.CategoryId,
+                        CategoryName = c.CategoryName,
                         Description = c.Description
                     }).ToListAsync();
 
                 return result;
             }
         }
+
+
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
@@ -65,7 +77,7 @@ namespace OMSWebService.Controllers
 
         // POST: api/categories
         [HttpPost]
-        public async Task<ActionResult<Category>> PostCategory([FromBody]Category item)
+        public async Task<ActionResult<Category>> PostCategory([FromBody] Category item)
         {
             _context.Categories.Add(item);
             await _context.SaveChangesAsync();
@@ -77,7 +89,7 @@ namespace OMSWebService.Controllers
                     CategoryName = item.CategoryName,
                     Description = item.Description
                 },
-                item); 
+                item);
         }
 
         // PUT: api/Categories/5
