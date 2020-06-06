@@ -56,8 +56,6 @@ namespace OMSWebService.Controllers
             }
         }
 
-
-
         // GET: api/Categories/5
         [HttpGet("{id}")]
         public async Task<ActionResult<object>> GetCategory(int id)
@@ -79,7 +77,14 @@ namespace OMSWebService.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory([FromBody] Category item)
         {
-            _context.Categories.Add(item);
+
+            Category category = new Category()
+            {
+                CategoryName = item.CategoryName,
+                Description = item.Description
+            };
+
+            _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetCategories),
@@ -89,7 +94,7 @@ namespace OMSWebService.Controllers
                     CategoryName = item.CategoryName,
                     Description = item.Description
                 },
-                item);
+                category);
         }
 
         // PUT: api/Categories/5

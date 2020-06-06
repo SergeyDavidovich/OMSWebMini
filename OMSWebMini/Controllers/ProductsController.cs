@@ -53,19 +53,24 @@ namespace OMSWebService.Controllers
 
         // POST: api/products
         [HttpPost]
-        public async Task<ActionResult<Product>> PostProduct(Product item)
+        public async Task<ActionResult<Product>> PostProduct([FromBody] Product item)
         {
-            _context.Products.Add(item);
+            Product product = new Product()
+            {
+                ProductName = item.ProductName
+            };
+
+            _context.Products.Add(product);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct),
+            return CreatedAtAction(nameof(GetProducts),
                 new
                 {
-                    Id = item.ProductId,
-                    ProductName = item.ProductName,
-                    CategoryId = item.Category.CategoryName
+                    ProductId = item.ProductId
+                    //ProductName = item.ProductName
+                    //CategoryId = item.Category.CategoryName
                 },
-                item);
+                product);
         }
 
         // PUT: api/products/5
