@@ -66,9 +66,7 @@ namespace OMSWebService.Controllers
             return CreatedAtAction(nameof(GetProducts),
                 new
                 {
-                    ProductId = item.ProductId
-                    //ProductName = item.ProductName
-                    //CategoryId = item.Category.CategoryName
+                    ProductId = item.ProductId,
                 },
                 product);
         }
