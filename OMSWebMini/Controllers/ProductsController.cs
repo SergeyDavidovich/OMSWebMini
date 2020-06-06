@@ -55,20 +55,21 @@ namespace OMSWebService.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromBody] Product item)
         {
-            Product product = new Product()
-            {
-                ProductName = item.ProductName
-            };
+            //Product product = new Product()
+            //{
+            //    ProductName = item.ProductName
+            //};
 
-            _context.Products.Add(product);
+            _context.Products.Add(item);
+
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetProducts),
                 new
                 {
-                    ProductId = item.ProductId,
+                    ProductId = item.ProductId
                 },
-                product);
+                item);
         }
 
         // PUT: api/products/5
