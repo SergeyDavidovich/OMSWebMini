@@ -7,8 +7,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OMSWebService.Model;
 using OMSWebService.Data;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using System.Collections;
 
 namespace OMSWebService.Controllers
 {
@@ -25,9 +24,19 @@ namespace OMSWebService.Controllers
 
         // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
+        public async Task<ActionResult<IEnumerable>> GetProducts()
         {
-            return await _context.Products.ToListAsync();
+            return await _context.Products
+                .Select(p => new
+                {
+                    ProductId = p.ProductId,
+                    ProductName = p.ProductName,
+                    SupplierName = p.Supplier.CompanyName,
+                    CategoryName = p.Category.CategoryName,
+                    UnitPrise = p.UnitPrice,
+                    UnitOnStock = p.UnitsInStock,
+                    Discontinued = p.Discontinued
+                }).ToListAsync();
         }
 
         // GET: api/products/5
@@ -41,7 +50,7 @@ namespace OMSWebService.Controllers
             }
             return product;
         }
-        
+
         // POST: api/products
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct(Product item)
@@ -49,11 +58,13 @@ namespace OMSWebService.Controllers
             _context.Products.Add(item);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetProduct), 
-                new {
-                    id = item.ProductId,
-                    ProductName = item.ProductName
-                }, 
+            return CreatedAtAction(nameof(GetProduct),
+                new
+                {
+                    Id = item.ProductId,
+                    ProductName = item.ProductName,
+                    CategoryId = item.Category.CategoryName
+                },
                 item);
         }
 

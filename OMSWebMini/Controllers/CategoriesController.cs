@@ -23,10 +23,9 @@ namespace OMSWebService.Controllers
 
         // GET: api/categories?include_picture=true
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(bool include_pictures = false)
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(
+            bool include_pictures = false)
         {
-            string request = HttpContext.Request.Path;
-
             if (include_pictures)
             {
                 var result = await _context.Categories.ToListAsync();
@@ -74,7 +73,7 @@ namespace OMSWebService.Controllers
             return CreatedAtAction(nameof(GetCategories),
                 new
                 {
-                    id = item.CategoryId,
+                    Id = item.CategoryId,
                     CategoryName = item.CategoryName,
                     Description = item.Description
                 },
