@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections;
-using System.Collections.Generic;
+﻿using System.Collections;
 using System.Linq;
 using System.Threading.Tasks;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OMSWebService.Data;
 using OMSWebService.Model;
-//hello
 namespace OMSWebService.Controllers
 {
     [Route("api/[controller]")]
@@ -77,7 +73,6 @@ namespace OMSWebService.Controllers
         [HttpPost]
         public async Task<ActionResult<Category>> PostCategory([FromBody] Category item)
         {
-
             Category category = new Category()
             {
                 CategoryName = item.CategoryName,
@@ -123,7 +118,6 @@ namespace OMSWebService.Controllers
                     throw;
                 }
             }
-
             return NoContent();
         }
 
