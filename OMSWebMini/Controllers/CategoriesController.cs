@@ -1,4 +1,5 @@
 ﻿using System.Collections;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
@@ -20,14 +21,14 @@ namespace OMSWebService.Controllers
 
         // GET: api/categories?include_picture=true
         [HttpGet]
-        public async Task<ActionResult<IEnumerable>> GetCategories(
+        public async Task<ActionResult<IEnumerable<Category>>> GetCategories(
             bool include_pictures = false)
         {
             if (include_pictures)
             {
                 var result = await _context.Categories
                     .Select(
-                    c => new
+                    c => new Category
                     {
                         CategoryId = c.CategoryId,
                         CategoryName = c.CategoryName,
@@ -41,7 +42,7 @@ namespace OMSWebService.Controllers
             {
                 var result = await _context.Categories.
                     Select(
-                    c => new
+                    c => new Category
                     {
                         CategoryId = c.CategoryId,
                         CategoryName = c.CategoryName,
@@ -54,18 +55,18 @@ namespace OMSWebService.Controllers
 
         // GET: api/Categories/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<object>> GetCategory(int id)
+        public async Task<ActionResult<Category>> GetCategory(int id)
         {
             var category = await _context.Categories.FindAsync(id);
 
             if (category == null)
                 return NotFound();
             else
-                return new
+                return new Category
                 {
-                    CategoryID = category.CategoryId,
+                    CategoryId = category.CategoryId,
                     CategoryName = category.CategoryName,
-                    Description = category.Description
+                    Description = category.Description,
                 };
         }
 

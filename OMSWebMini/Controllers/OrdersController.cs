@@ -7,6 +7,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using OMSWebService.Model;
 using OMSWebService.Data;
+using System.Collections;
+using NSwag.Generation.Processors;
 
 namespace OMSWebService.Controllers
 {
@@ -21,33 +23,48 @@ namespace OMSWebService.Controllers
             _context = context;
         }
 
-        // GET: api/orders?include_details=true
+        // GET: api/orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable<Order>>> GetOrders(bool include_details = false)
+        public async Task<ActionResult<IEnumerable>> GetOrdersIndex()
         {
-            List<Order> orders;
-
-            if (include_details)
-                orders = await _context.Orders.Include(o => o.OrderDetails).ToListAsync();
-            else
-                orders = await _context.Orders.ToListAsync();
+            var orders = await _context.Orders.Select(o => new
+            {
+                OrderId = o.OrderId,
+                CustomerId = o.Customer.CustomerId,
+                OrderDate = o.OrderDate,
+                ShipRegion = o.ShipRegion,
+                ShipPostalCode = o.ShipPostalCode,
+                ShipCity = o.ShipCity,
+                ShipAddress = o.ShipAddress,
+                RequiredDate = o.RequiredDate,
+                ShippedDate = o.ShippedDate
+            }).ToListAsync();
 
             return orders;
         }
-
+        //https://stackoverflow.com/questions/59199593/net-core-3-0-possible-object-cycle-was-detected-which-is-not-supported
         // GET: api/orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Order>> GetOrder(int id, bool include_details = false)
+        public async Task<ActionResult<Object>> GetOrder(int id)
         {
-            var orders = include_details ?
-                await _context.Orders.Include(o => o.OrderDetails).ToListAsync<Order>() : await _context.Orders.ToListAsync<Order>();
+            var order = await _context.Orders
+                .Where(o => o.OrderId == id)
+                .Include(o => o.OrderDetails)
+                .FirstOrDefaultAsync();
 
-            var order = orders.Where(o => o.OrderId == id).FirstOrDefault();
+            if (order == null) return NotFound();
 
-            if (order == null)
-            {
-                return NotFound();
-            }
+            var orderDetails = order.OrderDetails
+                .Select(o => new
+                {
+                    OrderId = o.OrderId,
+                    UnitPrice = o.UnitPrice,
+                    Quantity = o.Quantity,
+                    Discount = o.Discount
+                });
+
+            //order.OrderDetails = orderDetails;
+
             return order;
         }
 

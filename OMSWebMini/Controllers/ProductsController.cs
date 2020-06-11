@@ -24,17 +24,17 @@ namespace OMSWebService.Controllers
 
         // GET: api/products
         [HttpGet]
-        public async Task<ActionResult<IEnumerable>> GetProducts()
+        public async Task<ActionResult<IEnumerable<Product>>> GetProducts()
         {
             return await _context.Products
-                .Select(p => new
+                .Select(p => new Product
                 {
                     ProductId = p.ProductId,
                     ProductName = p.ProductName,
-                    SupplierName = p.Supplier.CompanyName,
-                    CategoryName = p.Category.CategoryName,
-                    UnitPrise = p.UnitPrice,
-                    UnitOnStock = p.UnitsInStock,
+                    Supplier = p.Supplier,
+                    Category = p.Category,
+                    UnitPrice = p.UnitPrice,
+                    UnitsInStock = p.UnitsInStock,
                     Discontinued = p.Discontinued
                 }).ToListAsync();
         }
