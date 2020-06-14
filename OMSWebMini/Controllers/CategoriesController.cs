@@ -4,8 +4,8 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
-using OMSWebService.Data;
-using OMSWebService.Model;
+using OMSWebMini.Data;
+using OMSWebMini.Model;
 namespace OMSWebService.Controllers
 {
     [Route("api/[controller]")]

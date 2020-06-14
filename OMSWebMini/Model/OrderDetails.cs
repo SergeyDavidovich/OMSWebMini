@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace OMSWebService.Model
+namespace OMSWebMini.Model
 {
     public partial class OrderDetails
     {

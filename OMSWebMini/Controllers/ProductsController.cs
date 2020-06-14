@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
-using OMSWebService.Model;
-using OMSWebService.Data;
+using OMSWebMini.Model;
+using OMSWebMini.Data;
 using System.Collections;
 
 namespace OMSWebService.Controllers
@@ -55,17 +55,12 @@ namespace OMSWebService.Controllers
         [HttpPost]
         public async Task<ActionResult<Product>> PostProduct([FromBody] Product item)
         {
-            //Product product = new Product()
-            //{
-            //    ProductName = item.ProductName
-            //};
-
             _context.Products.Add(item);
 
             await _context.SaveChangesAsync();
 
             return CreatedAtAction(nameof(GetProducts),
-                new
+                new Product
                 {
                     ProductId = item.ProductId
                 },

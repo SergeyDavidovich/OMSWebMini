@@ -5,8 +5,8 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 
 using Microsoft.EntityFrameworkCore;
-using OMSWebService.Model;
-using OMSWebService.Data;
+using OMSWebMini.Model;
+using OMSWebMini.Data;
 using System.Collections;
 using NSwag.Generation.Processors;
 
@@ -25,9 +25,9 @@ namespace OMSWebService.Controllers
 
         // GET: api/orders
         [HttpGet]
-        public async Task<ActionResult<IEnumerable>> GetOrdersIndex()
+        public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            var orders = await _context.Orders.Select(o => new
+            var orders = await _context.Orders.Select(o => new Order
             {
                 OrderId = o.OrderId,
                 CustomerId = o.Customer.CustomerId,
@@ -42,10 +42,11 @@ namespace OMSWebService.Controllers
 
             return orders;
         }
+
         //https://stackoverflow.com/questions/59199593/net-core-3-0-possible-object-cycle-was-detected-which-is-not-supported
         // GET: api/orders/5
         [HttpGet("{id}")]
-        public async Task<ActionResult<Object>> GetOrder(int id)
+        public async Task<ActionResult<Order>> GetOrder(int id)
         {
             var order = await _context.Orders
                 .Where(o => o.OrderId == id)
@@ -55,20 +56,19 @@ namespace OMSWebService.Controllers
             if (order == null) return NotFound();
 
             var orderDetails = order.OrderDetails
-                .Select(o => new
+                .Select(o => new OrderDetails
                 {
                     OrderId = o.OrderId,
                     UnitPrice = o.UnitPrice,
                     Quantity = o.Quantity,
-                    Discount = o.Discount
+                    Discount = o.Discount,
                 });
 
-            //order.OrderDetails = orderDetails;
-
+            order.OrderDetails = orderDetails.ToList();
             return order;
         }
 
-        // POST: api/products
+        // POST: api/orders
         [HttpPost]
         public async Task<ActionResult<Order>> PostProduct(Order order)
         {
@@ -76,11 +76,10 @@ namespace OMSWebService.Controllers
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOrder),
-                new
+            return CreatedAtAction(nameof(GetOrders),
+                new Order
                 {
-                    id = order.OrderId,
-                    orderDate = order.OrderDate
+                    OrderId = order.OrderId,
                 },
                 order);
         }
