@@ -70,18 +70,17 @@ namespace OMSWebService.Controllers
 
         // POST: api/orders
         [HttpPost]
-        public async Task<ActionResult<Order>> PostProduct(Order order)
+        public async Task<ActionResult<Order>> PostProduct([FromBody] Order order)
         {
             _context.Orders.Add(order);
 
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetOrders),
-                new Order
-                {
-                    OrderId = order.OrderId,
-                },
+            var result =  CreatedAtAction(
+                nameof(GetOrder),
+                new { Id = order.OrderId },
                 order);
+            return result;
         }
 
     }

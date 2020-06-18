@@ -56,7 +56,9 @@ namespace OMSWebMini.Controllers
             _context.Employees.Add(employee);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetEmployee", new { id = employee.EmployeeId }, employee);
+            return CreatedAtAction("GetEmployee",
+                new { id = employee.EmployeeId },
+                employee);
         }
 
         // PUT: api/Employees/5

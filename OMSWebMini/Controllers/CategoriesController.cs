@@ -83,12 +83,10 @@ namespace OMSWebService.Controllers
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction(nameof(GetCategories),
+            return CreatedAtAction(nameof(GetCategory),
                 new
                 {
-                    Id = item.CategoryId,
-                    CategoryName = item.CategoryName,
-                    Description = item.Description
+                    Id = item.CategoryId
                 },
                 category);
         }
