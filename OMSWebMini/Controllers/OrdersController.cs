@@ -76,15 +76,79 @@ namespace OMSWebService.Controllers
 
             await _context.SaveChangesAsync();
 
-            var result =  CreatedAtAction(
+            var result = CreatedAtAction(
                 nameof(GetOrder),
                 new { Id = order.OrderId },
                 order);
             return result;
         }
+        // PUT: api/orders/10228
+        [HttpPut("{id}")]
+        public async Task<IActionResult> PutOrder(int id, Order item)
+        {
+            if (id != item.OrderId)
+            {
+                return BadRequest();
+            }
 
+            _context.Entry(item).State = EntityState.Modified;
+
+            await _context.SaveChangesAsync();
+
+            return NoContent();
+        }
+
+        // DELETE: api/orders/10248
+        [HttpDelete("{id}")]
+        public async Task<IActionResult> DeleteOrder(int id)
+        {
+            var order = await _context.Orders.FindAsync(id);
+
+            if (order == null)
+            {
+                return NotFound();
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    var details = _context.OrderDetails.Where(o => order.OrderId == id);
+                    _context.OrderDetails.RemoveRange(details);
+
+                    _context.Remove(order);
+
+                    await transaction.CommitAsync();
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+                await _context.SaveChangesAsync();
+            }
+            return NoContent();
+        }
     }
+
+    // DELETE: api/orders/5
+    //[HttpDelete("{id}")]
+    //public async Task<IActionResult> DeleteOrder(int id)
+    //{
+    //    var item = await _context.Orders.FindAsync(id);
+
+    //    if (item == null)
+    //    {
+    //        return NotFound();
+    //    }
+
+    //    _context.Orders.Remove(item);
+
+    //    await _context.SaveChangesAsync();
+
+    //    return NoContent();
+    //}
 }
+
 
 
 
