@@ -128,26 +128,65 @@ namespace OMSWebService.Controllers
             }
             return NoContent();
         }
+
+        //TODO: Not tested
+
+        // DELETE: api/orders/10248
+        [HttpDelete("{id[]}")]
+        public async Task<IActionResult> DeleteOrdersRange([FromBody] int[] range)
+        {
+            List<Order> orders = new List<Order>();
+            List<OrderDetails> details = new List<OrderDetails>();
+
+            foreach (int id in range)
+            {
+                orders.Add(await _context.Orders.FindAsync(id));
+            }
+
+            foreach (var item in orders)
+            {
+                if (orders == null)
+                {
+                    return NotFound();
+                }
+
+                details.Add((_context.OrderDetails.Where(o => o.OrderId == item.OrderId) as OrderDetails));
+            }
+
+            using (var transaction = _context.Database.BeginTransaction())
+            {
+                try
+                {
+                    _context.OrderDetails.RemoveRange(details);
+                    _context.Orders.RemoveRange(orders);
+                }
+                catch (Exception)
+                {
+                    await transaction.RollbackAsync();
+                }
+                await _context.SaveChangesAsync();
+            }
+            return NoContent();
+        }
+
+        // DELETE: api/orders/5
+        //[HttpDelete("{id}")]
+        //public async Task<IActionResult> DeleteOrder(int id)
+        //{
+        //    var item = await _context.Orders.FindAsync(id);
+
+        //    if (item == null)
+        //    {
+        //        return NotFound();
+        //    }
+
+        //    _context.Orders.Remove(item);
+
+        //    await _context.SaveChangesAsync();
+
+        //    return NoContent();
+        //}
     }
-
-    // DELETE: api/orders/5
-    //[HttpDelete("{id}")]
-    //public async Task<IActionResult> DeleteOrder(int id)
-    //{
-    //    var item = await _context.Orders.FindAsync(id);
-
-    //    if (item == null)
-    //    {
-    //        return NotFound();
-    //    }
-
-    //    _context.Orders.Remove(item);
-
-    //    await _context.SaveChangesAsync();
-
-    //    return NoContent();
-    //}
-}
 
 
 
