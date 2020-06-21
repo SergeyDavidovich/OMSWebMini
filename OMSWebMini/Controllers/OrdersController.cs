@@ -126,13 +126,14 @@ namespace OMSWebService.Controllers
                 }
                 await _context.SaveChangesAsync();
             }
+
             return NoContent();
         }
 
         //TODO: Not tested yet
 
-        // DELETE: api/orders/10248
-        [HttpDelete("id[]}")]
+        // DELETE: api/orders/
+        [HttpDelete]
         public async Task<IActionResult> DeleteOrdersRange([FromBody] int[] range)
         {
             List<Order> orders = new List<Order>();
@@ -140,28 +141,26 @@ namespace OMSWebService.Controllers
 
             foreach (int id in range)
             {
-                orders.Add(await _context.Orders.FindAsync(id));
+                var order = await _context.Orders.FindAsync(id);
+                if (order != null) orders.Add(order);
             }
+
+            if (orders.Count == 0) return NotFound();
 
             foreach (var item in orders)
             {
-                if (orders == null)
-                {
-                    return NotFound();
-                }
-
-                if (item != null)
-                {
-                    details.Add((_context.OrderDetails.Where(o => o.OrderId == item.OrderId) as OrderDetails));
-                }
+                var detail = _context.OrderDetails.Where(o => o.OrderId == item.OrderId) as OrderDetails;
+                if (detail != null) details.Add(detail);
             }
 
             using (var transaction = _context.Database.BeginTransaction())
             {
                 try
                 {
-                    _context.OrderDetails.RemoveRange(details);
+                    if (details.Count != 0) _context.OrderDetails.RemoveRange(details);
+
                     _context.Orders.RemoveRange(orders);
+                    await transaction.CommitAsync();
                 }
                 catch (Exception)
                 {
