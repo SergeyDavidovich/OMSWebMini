@@ -82,6 +82,7 @@ namespace OMSWebService.Controllers
                 order);
             return result;
         }
+
         // PUT: api/orders/10228
         [HttpPut("{id}")]
         public async Task<IActionResult> PutOrder(int id, Order item)
@@ -129,8 +130,6 @@ namespace OMSWebService.Controllers
 
             return NoContent();
         }
-
-        //TODO: Not tested yet
 
         // DELETE: api/orders/
         [HttpDelete]
