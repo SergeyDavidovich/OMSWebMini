@@ -129,10 +129,10 @@ namespace OMSWebService.Controllers
             return NoContent();
         }
 
-        //TODO: Not tested
+        //TODO: Not tested yet
 
         // DELETE: api/orders/10248
-        [HttpDelete("{id[]}")]
+        [HttpDelete("id[]}")]
         public async Task<IActionResult> DeleteOrdersRange([FromBody] int[] range)
         {
             List<Order> orders = new List<Order>();
@@ -188,8 +188,9 @@ namespace OMSWebService.Controllers
         //    await _context.SaveChangesAsync();
 
         //    return NoContent();
-        //}
+
     }
+}
 
 
 
