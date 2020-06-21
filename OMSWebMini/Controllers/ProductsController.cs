@@ -77,6 +77,7 @@ namespace OMSWebService.Controllers
             }
 
             _context.Entry(item).State = EntityState.Modified;
+
             await _context.SaveChangesAsync();
 
             return NoContent();
@@ -86,14 +87,14 @@ namespace OMSWebService.Controllers
         [HttpDelete("{id}")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            var todoItem = await _context.Products.FindAsync(id);
+            var item = await _context.Products.FindAsync(id);
 
-            if (todoItem == null)
+            if (item == null)
             {
                 return NotFound();
             }
 
-            _context.Products.Remove(todoItem);
+            _context.Products.Remove(item);
             await _context.SaveChangesAsync();
 
             return NoContent();
