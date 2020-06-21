@@ -150,7 +150,10 @@ namespace OMSWebService.Controllers
                     return NotFound();
                 }
 
-                details.Add((_context.OrderDetails.Where(o => o.OrderId == item.OrderId) as OrderDetails));
+                if (item != null)
+                {
+                    details.Add((_context.OrderDetails.Where(o => o.OrderId == item.OrderId) as OrderDetails));
+                }
             }
 
             using (var transaction = _context.Database.BeginTransaction())
