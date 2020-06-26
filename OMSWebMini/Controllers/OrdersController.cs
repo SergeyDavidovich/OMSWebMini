@@ -115,9 +115,11 @@ namespace OMSWebService.Controllers
                 try
                 {
                     var details = _context.OrderDetails.Where(o => order.OrderId == id);
-                    _context.OrderDetails.RemoveRange(details);
 
-                    _context.Remove(order);
+                    _context.OrderDetails.RemoveRange(details);
+                    _context.Orders.Remove(order);
+
+                    await _context.SaveChangesAsync();
 
                     await transaction.CommitAsync();
                 }
@@ -125,7 +127,6 @@ namespace OMSWebService.Controllers
                 {
                     await transaction.RollbackAsync();
                 }
-                await _context.SaveChangesAsync();
             }
 
             return NoContent();
