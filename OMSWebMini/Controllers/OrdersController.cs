@@ -55,16 +55,18 @@ namespace OMSWebService.Controllers
 
             if (order == null) return NotFound();
 
-            var orderDetails = order.OrderDetails
-                .Select(o => new OrderDetails
-                {
-                    OrderId = o.OrderId,
-                    UnitPrice = o.UnitPrice,
-                    Quantity = o.Quantity,
-                    Discount = o.Discount,
-                });
+            //var orderDetails = order.OrderDetails
+            //    .Select(o => new OrderDetails
+            //    {
+            //        OrderId = o.OrderId,
+            //        ProductId = o.ProductId,
+            //        UnitPrice = o.UnitPrice,
+            //        Quantity = o.Quantity,
+            //        Discount = o.Discount,
+            //    });
 
-            order.OrderDetails = orderDetails.ToList();
+            //order.OrderDetails = orderDetails.ToList();
+
             return order;
         }
 
