@@ -27,19 +27,9 @@ namespace OMSWebService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            var orders = await _context.Orders.Select(o => new Order
-            {
-                OrderId = o.OrderId,
-                CustomerId = o.Customer.CustomerId,
-                OrderDate = o.OrderDate,
-                ShipRegion = o.ShipRegion,
-                ShipPostalCode = o.ShipPostalCode,
-                ShipCity = o.ShipCity,
-                ShipAddress = o.ShipAddress,
-                RequiredDate = o.RequiredDate,
-                ShippedDate = o.ShippedDate
-            }).ToListAsync();
-
+            var orders = await _context.Orders.ToListAsync();
+            //var orders = await _context.Orders.Include(o => o.OrderDetails).ToListAsync();
+            
             return orders;
         }
 
@@ -119,6 +109,7 @@ namespace OMSWebService.Controllers
                     var details = _context.OrderDetails.Where(o => order.OrderId == id);
 
                     _context.OrderDetails.RemoveRange(details);
+
                     _context.Orders.Remove(order);
 
                     await _context.SaveChangesAsync();
