@@ -30,12 +30,9 @@ namespace OMSWebMini
         {
             string connection = Configuration.GetConnectionString("OMSDatabase");
 
-            services.AddDbContext<NORTHWNDContext>(options =>
-            options.UseSqlServer(connection));
+            services.AddDbContext<NORTHWNDContext>(options => options.UseSqlServer(connection));
 
             services.AddControllers();
-
-            services.AddSingleton(c => new SmtpClient());
 
             // Register the Swagger services
             services.AddSwaggerDocument();

@@ -9,6 +9,7 @@ using OMSWebMini.Model;
 using OMSWebMini.Data;
 using System.Collections;
 using NSwag.Generation.Processors;
+using Microsoft.EntityFrameworkCore.Internal;
 
 namespace OMSWebService.Controllers
 {
@@ -27,9 +28,10 @@ namespace OMSWebService.Controllers
         [HttpGet]
         public async Task<ActionResult<IEnumerable<Order>>> GetOrders()
         {
-            var orders = await _context.Orders.ToListAsync();
-            //var orders = await _context.Orders.Include(o => o.OrderDetails).ToListAsync();
-            
+            //var orders = await _context.Orders.ToListAsync();
+
+            var orders = await _context.Orders.Include(o => o.OrderDetails).ToListAsync();
+
             return orders;
         }
 
@@ -163,24 +165,6 @@ namespace OMSWebService.Controllers
             }
             return NoContent();
         }
-
-        // DELETE: api/orders/5
-        //[HttpDelete("{id}")]
-        //public async Task<IActionResult> DeleteOrder(int id)
-        //{
-        //    var item = await _context.Orders.FindAsync(id);
-
-        //    if (item == null)
-        //    {
-        //        return NotFound();
-        //    }
-
-        //    _context.Orders.Remove(item);
-
-        //    await _context.SaveChangesAsync();
-
-        //    return NoContent();
-
     }
 }
 
