@@ -40,7 +40,7 @@ namespace OMSWebService.Controllers
             }
             else
             {
-                var result = await _context.Categories.
+                var result = await  _context.Categories.
                     Select(
                     c => new Category
                     {
@@ -83,6 +83,8 @@ namespace OMSWebService.Controllers
             _context.Categories.Add(category);
             await _context.SaveChangesAsync();
 
+            var xxx = nameof(GetCategory);
+
             return CreatedAtAction(nameof(GetCategory),
                 new
                 {
@@ -93,7 +95,7 @@ namespace OMSWebService.Controllers
 
         // PUT: api/Categories/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCategory(int id, Category category)
+        public async Task<IActionResult> PutCategory(int id, [FromBody]Category category)
         {
             if (id != category.CategoryId)
             {
@@ -117,7 +119,7 @@ namespace OMSWebService.Controllers
                     throw;
                 }
             }
-            return NoContent();
+            return Ok();
         }
 
         // DELETE: api/Categories/5
